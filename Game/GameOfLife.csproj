@@ -63,7 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CellPatterns.cs" />
+    <Compile Include="Constants\CellPatterns.cs" />
     <Compile Include="Enums\CellState.cs" />
     <Compile Include="Forms\TankControls.cs">
       <SubType>Form</SubType>
