@@ -1,0 +1,12 @@
+*.suo
+*.rsuser
+*.user
+*.sln.docstates
+
+.vs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
