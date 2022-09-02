@@ -9,6 +9,7 @@ namespace GameOfLife.Forms
     {
         #region Private Members
         private double _lastDensity;
+        private Color _lastCellColor;
         #endregion Private Members
 
         #region Constructors
@@ -27,6 +28,10 @@ namespace GameOfLife.Forms
         /// Identify if the grid should be shown on the window
         /// </summary>
         public bool ShowGrid { get; set; }
+        /// <summary>
+        /// Color of the tank
+        /// </summary>
+        public Color TankColor { get; set; }
         #endregion Properties
 
         #region Public 
@@ -34,19 +39,17 @@ namespace GameOfLife.Forms
         /// Reset the tank
         /// </summary>
         /// <param name="randomize"></param>
-        public void Reset() => Reset(Tank.CellSize, Tank.CellColor, _lastDensity);
-
-        /// <summary>
-        /// Reset the tank
-        /// </summary>
-        /// <param name="randomize"></param>
         public void Reset(int size, Color cellColor, double density = 0)
         {
-            Tank = new Tank(Window.Width, Window.Height, size, cellColor);
+            Tank = new Tank(Window.Width, Window.Height, size);
+            foreach (Cell cell in Tank.Cells)
+                cell.Color = cellColor;
+
             if (density > 0)
                 Tank.Randomize(density / 100);
 
             _lastDensity = density;
+            _lastCellColor = cellColor;
 
             Render();
         }
@@ -55,9 +58,8 @@ namespace GameOfLife.Forms
         /// Reset the board with a pattern
         /// </summary>
         /// <param name="pattern"></param>
-        public void Reset(string pattern)
+        public void InjectPattern(string pattern)
         {
-            Reset(Tank.CellSize, Tank.CellColor);
             Tank.InjectPattern(pattern);
             Render();
         }
@@ -81,25 +83,25 @@ namespace GameOfLife.Forms
         private void Render()
         {
             using (var canvas = new Bitmap(Tank.Width, Tank.Height))
-            using (var brush = new SolidBrush(Tank.CellColor))
             using (var gfx = Graphics.FromImage(canvas))
             {
-                gfx.Clear(ColorTranslator.FromHtml("#2f3539"));
+                gfx.Clear(TankColor);
 
-                var cellSize = (ShowGrid && Tank.CellSize > 1) ?
-                                new Size(Tank.CellSize - 1, Tank.CellSize - 1) :
-                                new Size(Tank.CellSize, Tank.CellSize);
-
+                int buffer = ShowGrid && Tank.CellSize > 1 ? 1 : 0;
+                var cellSize = new Size(Tank.CellSize - buffer, Tank.CellSize - buffer);
                 for (int x = 0; x < Tank.Columns; x++)
                 {
                     for (int y = 0; y < Tank.Rows; y++)
                     {
-                        if (!Tank.IsCellAlive(x, y))
+                        Cell cell = Tank[x, y];
+                        if (!cell.IsAlive)
                             continue;
 
                         var cellLocation = new Point(x * Tank.CellSize, y * Tank.CellSize);
                         var cellRect = new Rectangle(cellLocation, cellSize);
-                        gfx.FillRectangle(brush, cellRect);
+
+                        using (var brush = new SolidBrush(cell.Color))
+                            gfx.FillRectangle(brush, cellRect);
                     }
                 }
 
@@ -118,7 +120,7 @@ namespace GameOfLife.Forms
             // Method hit on form opening, so ignore first round
             if (Tank == null)
                 return;
-            Reset();
+            Reset(Tank.CellSize, _lastCellColor, _lastDensity);
         }
         #endregion Private Methods
     }

@@ -53,6 +53,8 @@ namespace GameOfLife.Forms
 			this.label7 = new System.Windows.Forms.Label();
 			this.TotDeaths = new System.Windows.Forms.Label();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.TankColorButton = new System.Windows.Forms.Button();
+			this.CellColorButton = new System.Windows.Forms.Button();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.GunButton = new System.Windows.Forms.Button();
 			this.ResetButton = new System.Windows.Forms.Button();
@@ -60,8 +62,9 @@ namespace GameOfLife.Forms
 			this.SpaceshipButton = new System.Windows.Forms.Button();
 			this.RowButton = new System.Windows.Forms.Button();
 			this.Timer = new System.Windows.Forms.Timer(this.components);
-			this.ColorDialog = new System.Windows.Forms.ColorDialog();
-			this.ColorButton = new System.Windows.Forms.Button();
+			this.TankColorDialog = new System.Windows.Forms.ColorDialog();
+			this.CellColorDialog = new System.Windows.Forms.ColorDialog();
+			this.SunButton = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.CellSize)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.Delay)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.Density)).BeginInit();
@@ -73,7 +76,7 @@ namespace GameOfLife.Forms
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(46, 24);
+			this.label1.Location = new System.Drawing.Point(6, 24);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(47, 13);
 			this.label1.TabIndex = 3;
@@ -100,7 +103,7 @@ namespace GameOfLife.Forms
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(13, 50);
+			this.label2.Location = new System.Drawing.Point(6, 50);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(80, 13);
 			this.label2.TabIndex = 9;
@@ -131,7 +134,7 @@ namespace GameOfLife.Forms
 			// 
 			// Density
 			// 
-			this.Density.Location = new System.Drawing.Point(106, 51);
+			this.Density.Location = new System.Drawing.Point(103, 80);
 			this.Density.Minimum = new decimal(new int[] {
             1,
             0,
@@ -150,7 +153,7 @@ namespace GameOfLife.Forms
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(9, 53);
+			this.label3.Location = new System.Drawing.Point(6, 82);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(91, 13);
 			this.label3.TabIndex = 13;
@@ -161,7 +164,7 @@ namespace GameOfLife.Forms
 			this.ShowGrid.AutoSize = true;
 			this.ShowGrid.Checked = true;
 			this.ShowGrid.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.ShowGrid.Location = new System.Drawing.Point(80, 104);
+			this.ShowGrid.Location = new System.Drawing.Point(9, 160);
 			this.ShowGrid.Name = "ShowGrid";
 			this.ShowGrid.Size = new System.Drawing.Size(75, 17);
 			this.ShowGrid.TabIndex = 14;
@@ -172,7 +175,7 @@ namespace GameOfLife.Forms
 			// StopTime
 			// 
 			this.StopTime.AutoSize = true;
-			this.StopTime.Location = new System.Drawing.Point(6, 104);
+			this.StopTime.Location = new System.Drawing.Point(9, 137);
 			this.StopTime.Name = "StopTime";
 			this.StopTime.Size = new System.Drawing.Size(74, 17);
 			this.StopTime.TabIndex = 15;
@@ -184,7 +187,7 @@ namespace GameOfLife.Forms
 			// 
 			this.Feed.Location = new System.Drawing.Point(12, 149);
 			this.Feed.Name = "Feed";
-			this.Feed.Size = new System.Drawing.Size(308, 65);
+			this.Feed.Size = new System.Drawing.Size(134, 103);
 			this.Feed.TabIndex = 16;
 			this.Feed.Text = "Feed";
 			this.Feed.UseVisualStyleBackColor = true;
@@ -327,7 +330,8 @@ namespace GameOfLife.Forms
 			// 
 			// groupBox2
 			// 
-			this.groupBox2.Controls.Add(this.ColorButton);
+			this.groupBox2.Controls.Add(this.TankColorButton);
+			this.groupBox2.Controls.Add(this.CellColorButton);
 			this.groupBox2.Controls.Add(this.label1);
 			this.groupBox2.Controls.Add(this.CellSize);
 			this.groupBox2.Controls.Add(this.Delay);
@@ -336,13 +340,34 @@ namespace GameOfLife.Forms
 			this.groupBox2.Controls.Add(this.label2);
 			this.groupBox2.Location = new System.Drawing.Point(152, 12);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(168, 131);
+			this.groupBox2.Size = new System.Drawing.Size(168, 240);
 			this.groupBox2.TabIndex = 22;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Config";
 			// 
+			// TankColorButton
+			// 
+			this.TankColorButton.Location = new System.Drawing.Point(6, 74);
+			this.TankColorButton.Name = "TankColorButton";
+			this.TankColorButton.Size = new System.Drawing.Size(149, 23);
+			this.TankColorButton.TabIndex = 19;
+			this.TankColorButton.Text = "Set Tank Color";
+			this.TankColorButton.UseVisualStyleBackColor = true;
+			this.TankColorButton.Click += new System.EventHandler(this.TankColorButton_Click);
+			// 
+			// CellColorButton
+			// 
+			this.CellColorButton.Location = new System.Drawing.Point(6, 103);
+			this.CellColorButton.Name = "CellColorButton";
+			this.CellColorButton.Size = new System.Drawing.Size(149, 23);
+			this.CellColorButton.TabIndex = 18;
+			this.CellColorButton.Text = "Set Cell Color";
+			this.CellColorButton.UseVisualStyleBackColor = true;
+			this.CellColorButton.Click += new System.EventHandler(this.CellColorButton_Click);
+			// 
 			// groupBox3
 			// 
+			this.groupBox3.Controls.Add(this.SunButton);
 			this.groupBox3.Controls.Add(this.GunButton);
 			this.groupBox3.Controls.Add(this.ResetButton);
 			this.groupBox3.Controls.Add(this.GliderButton);
@@ -350,9 +375,9 @@ namespace GameOfLife.Forms
 			this.groupBox3.Controls.Add(this.RowButton);
 			this.groupBox3.Controls.Add(this.Density);
 			this.groupBox3.Controls.Add(this.label3);
-			this.groupBox3.Location = new System.Drawing.Point(12, 220);
+			this.groupBox3.Location = new System.Drawing.Point(12, 258);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(308, 82);
+			this.groupBox3.Size = new System.Drawing.Size(308, 113);
 			this.groupBox3.TabIndex = 23;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Reset";
@@ -371,7 +396,7 @@ namespace GameOfLife.Forms
 			// 
 			this.ResetButton.Location = new System.Drawing.Point(6, 19);
 			this.ResetButton.Name = "ResetButton";
-			this.ResetButton.Size = new System.Drawing.Size(153, 23);
+			this.ResetButton.Size = new System.Drawing.Size(153, 52);
 			this.ResetButton.TabIndex = 15;
 			this.ResetButton.Text = "Random";
 			this.ResetButton.UseVisualStyleBackColor = true;
@@ -412,21 +437,21 @@ namespace GameOfLife.Forms
 			this.Timer.Enabled = true;
 			this.Timer.Tick += new System.EventHandler(this.Timer_Tick);
 			// 
-			// ColorButton
+			// SunButton
 			// 
-			this.ColorButton.Location = new System.Drawing.Point(6, 75);
-			this.ColorButton.Name = "ColorButton";
-			this.ColorButton.Size = new System.Drawing.Size(149, 23);
-			this.ColorButton.TabIndex = 18;
-			this.ColorButton.Text = "Set Color";
-			this.ColorButton.UseVisualStyleBackColor = true;
-			this.ColorButton.Click += new System.EventHandler(this.ColorButton_Click);
+			this.SunButton.Location = new System.Drawing.Point(262, 77);
+			this.SunButton.Name = "SunButton";
+			this.SunButton.Size = new System.Drawing.Size(39, 23);
+			this.SunButton.TabIndex = 20;
+			this.SunButton.Text = "Sun";
+			this.SunButton.UseVisualStyleBackColor = true;
+			this.SunButton.Click += new System.EventHandler(this.SunButton_Click);
 			// 
 			// TankControls
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(332, 312);
+			this.ClientSize = new System.Drawing.Size(332, 383);
 			this.Controls.Add(this.groupBox3);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
@@ -480,7 +505,10 @@ namespace GameOfLife.Forms
 		private System.Windows.Forms.Button RowButton;
 		private System.Windows.Forms.Timer Timer;
 		private System.Windows.Forms.Label AvgLifespan;
-		private System.Windows.Forms.ColorDialog ColorDialog;
-		private System.Windows.Forms.Button ColorButton;
+		private System.Windows.Forms.Button CellColorButton;
+		private System.Windows.Forms.Button TankColorButton;
+		private System.Windows.Forms.ColorDialog TankColorDialog;
+		private System.Windows.Forms.ColorDialog CellColorDialog;
+		private System.Windows.Forms.Button SunButton;
 	}
 }

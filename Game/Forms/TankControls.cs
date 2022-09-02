@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GameOfLife.Models;
 
 namespace GameOfLife.Forms
 {
@@ -29,8 +30,12 @@ namespace GameOfLife.Forms
 			_window = window;
 			InitializeComponent();
 
-			_window.FormClosed += (s, e) => Close();
+			TankColorDialog.Color = Color.Black;
+			CellColorDialog.Color = Color.LightBlue;
+
+			_window.TankColor = TankColorDialog.Color;
 			_window.ShowGrid = ShowGrid.Checked;
+			_window.FormClosed += (s, e) => Close();
 			_window.Show();
 
 			Reset();
@@ -90,15 +95,21 @@ namespace GameOfLife.Forms
 		private void Timer_Tick(object sender, EventArgs e)
 		{
 			_window.Advance(out int newBorns, out int died);
-			_window.Tank.GetAliveCellMetrics(out int alive, out double avgLifespan);
 
+			int totAge = _cellsAlive = 0;
 			int totCells = _window.Tank.Rows * _window.Tank.Columns;
-			_cellsAlive = alive;
-			_cellsDead = totCells - alive;
+			foreach (var cell in _window.Tank.Cells)
+				if (cell.IsAlive)
+				{
+					_cellsAlive++;
+					totAge += cell.Age;
+				}
+
+			_cellsDead = totCells - _cellsAlive;
 			_totBirths += newBorns;
 			_totDeaths += died;
 			_totCycles++;
-			_avgLifespan = avgLifespan;
+			_avgLifespan = _cellsAlive == 0 ? 0 : (double)totAge / _cellsAlive;
 
 			SetStats();
 		}
@@ -107,25 +118,30 @@ namespace GameOfLife.Forms
 		#region Options
 		private void ResetButton_Click(object sender, EventArgs e) => Reset();
 
-		private void GliderButton_Click(object sender, EventArgs e) => _window.Reset(CellPatterns.GLIDER);
+		private void GliderButton_Click(object sender, EventArgs e) => Reset(CellPatterns.GLIDER);
 
-		private void SpaceshipButton_Click(object sender, EventArgs e) => _window.Reset(CellPatterns.SPACESHIP);
+		private void SpaceshipButton_Click(object sender, EventArgs e) => Reset(CellPatterns.SPACESHIP);
 
-		private void GunButton_Click(object sender, EventArgs e) => _window.Reset(CellPatterns.GUN);
+		private void GunButton_Click(object sender, EventArgs e) => Reset(CellPatterns.GUN);
 
-		private void RowButton_Click(object sender, EventArgs e) => _window.Reset(CellPatterns.ROW);
+		private void RowButton_Click(object sender, EventArgs e) => Reset(CellPatterns.ROW);
 
-		private void ColorButton_Click(object sender, EventArgs e)
+		private void SunButton_Click(object sender, EventArgs e) => Reset(CellPatterns.SUN);
+
+		private void CellColorButton_Click(object sender, EventArgs e)
 		{
-			ColorDialog colorDialog = new ColorDialog();
-			
-			// Keeps the user from selecting a custom color.
-			colorDialog.AllowFullOpen = false;
-			colorDialog.Color = _window.Tank.CellColor;
+			if (CellColorDialog.ShowDialog() != DialogResult.OK)
+				return;
 
-			// Update the text box color if the user clicks OK 
-			if (colorDialog.ShowDialog() == DialogResult.OK)
-				_window.Tank.CellColor = colorDialog.Color;
+			foreach (Cell cell in _window.Tank.Cells)
+				cell.Color = CellColorDialog.Color;
+		}
+
+		private void TankColorButton_Click(object sender, EventArgs e)
+		{
+			if (TankColorDialog.ShowDialog() != DialogResult.OK)
+				return;
+			_window.TankColor = TankColorDialog.Color;
 		}
 		#endregion Options
 
@@ -135,6 +151,28 @@ namespace GameOfLife.Forms
 		/// </summary>
 		private void Reset()
 		{
+			ResetStats();
+			SetStats();
+
+			_window.Reset((int)CellSize.Value, CellColorDialog.Color, (double)Density.Value);
+		}
+
+		/// <summary>
+		/// Reset the state of the tank
+		/// </summary>
+		private void Reset(string pattern)
+		{
+			ResetStats();
+			SetStats();
+			_window.Reset((int)CellSize.Value, CellColorDialog.Color);
+			_window.InjectPattern(pattern);
+		}
+
+		/// <summary>
+		/// Reset the state of the tank
+		/// </summary>
+		private void ResetStats()
+		{
 			_cellsAlive = 0;
 			_cellsDead = 0;
 			_totBirths = 0;
@@ -142,9 +180,6 @@ namespace GameOfLife.Forms
 			_totCycles = 0;
 			_avgLifespan = 0;
 			SetStats();
-
-			Color cellColor = _window?.Tank?.CellColor ?? Color.LightBlue;
-			_window.Reset((int)CellSize.Value, cellColor, (double)Density.Value);
 		}
 
 		/// <summary>

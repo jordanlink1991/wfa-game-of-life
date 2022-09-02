@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using GameOfLife.Enums;
 
@@ -15,6 +16,8 @@ namespace GameOfLife.Models
             Neighbors = new List<Cell>();
             State = CellState.Dead;
             IsFed = false;
+            Color = Color.LightBlue;
+            Age = 0;
         }
         #endregion Constructors
 
@@ -35,6 +38,10 @@ namespace GameOfLife.Models
         /// Represents the state of the cell
         /// </summary>
         public CellState State { get; set; }
+        /// <summary>
+        /// Color of the cell
+        /// </summary>
+        public Color Color { get; set; }
         /// <summary>
         /// Represents if the cell is currently allive
         /// </summary>

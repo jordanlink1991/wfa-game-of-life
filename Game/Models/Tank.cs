@@ -10,27 +10,29 @@ namespace GameOfLife.Models
     public class Tank
     {
         #region Private Members
-        private readonly Cell[,] _cells;
         private readonly Random _random;
         #endregion Private Members
 
         #region Constructors
-        public Tank(int width, int height, int cellSize, Color cellColor, bool wrap = true)
+        public Tank(int width, int height, int cellSize, bool wrap = true)
         {
             _random = new Random();
 
-            _cells = new Cell[width / cellSize, height / cellSize];
+            Cells = new Cell[width / cellSize, height / cellSize];
             for (int x = 0; x < Columns; x++)
                 for (int y = 0; y < Rows; y++)
-                    _cells[x, y] = new Cell();
+                    Cells[x, y] = new Cell();
 
             CellSize = cellSize;
-            CellColor = cellColor;
             ConnectCells(wrap);
         }
         #endregion Constructors
 
         #region Properties
+        /// <summary>
+        /// Cells in the tank
+        /// </summary>
+        public Cell[,] Cells { get; private set; }
         /// <summary>
         /// Size of the cells
         /// </summary>
@@ -38,11 +40,11 @@ namespace GameOfLife.Models
         /// <summary>
         /// Amount of columns in the tank
         /// </summary>
-		public int Columns => _cells.GetLength(0);
+		public int Columns => Cells.GetLength(0);
         /// <summary>
         /// Amount of rows in the tank
         /// </summary>
-        public int Rows => _cells.GetLength(1);
+        public int Rows => Cells.GetLength(1);
         /// <summary>
         /// Width of the tank
         /// </summary>
@@ -51,11 +53,17 @@ namespace GameOfLife.Models
         /// Height of the tank
         /// </summary>
         public int Height => Rows * CellSize;
-        /// <summary>
-        /// Color of the cells in the tank
-        /// </summary>
-        public Color CellColor { get; set; }
         #endregion Properties
+
+        #region Indexers
+        /// <summary>
+        /// Get the cell at the index
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public Cell this[int x, int y] => Cells[x, y];
+        #endregion Indexers
 
         #region Public Methods
         /// <summary>
@@ -64,7 +72,7 @@ namespace GameOfLife.Models
         /// <param name="liveDensity"></param>
         public void Randomize(double liveDensity)
         {
-            foreach (var cell in _cells)
+            foreach (var cell in Cells)
                 cell.State = (_random.NextDouble() < liveDensity) ? CellState.Alive : CellState.Dead;
         }
 
@@ -82,7 +90,7 @@ namespace GameOfLife.Models
             for (int y = 0; y < lines.Length; y++)
                 for (int x = 0; x < lines[y].Length; x++)
                     if(lines[y].Substring(x, 1) == "X")
-                        _cells[x + xOffset, y + yOffset].State = CellState.Alive;
+                        Cells[x + xOffset, y + yOffset].State = CellState.Alive;
         }
 
         /// <summary>
@@ -91,7 +99,7 @@ namespace GameOfLife.Models
         public void Advance(out int newBorns, out int died)
         {
             died = newBorns = 0;
-            foreach (var cell in _cells)
+            foreach (var cell in Cells)
             {
                 cell.DetermineNextState();
                 if (cell.State == CellState.ToBeBorn)
@@ -100,50 +108,23 @@ namespace GameOfLife.Models
                     died++;
             }
             
-            foreach (var cell in _cells)
+            foreach (var cell in Cells)
                 cell.Update();
         }
-
-        /// <summary>
-        /// Returns the alive state of the cell at the given position
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        public bool IsCellAlive(int x, int y) => _cells[x, y].IsAlive;
 
         /// <summary>
         /// Feed all the alive cells
         /// </summary>
         public void FeedCells()
         {
-            foreach (var cell in _cells)
-                if (cell.IsAlive)
-                    cell.IsFed = true;
-        }
-
-        /// <summary>
-        /// Get metrics of the live cells
-        /// </summary>
-        /// <param name="alive"></param>
-        /// <param name="avgLifespan"></param>
-        public void GetAliveCellMetrics(out int alive, out double avgLifespan)
-        {
-            int totAge = alive = 0;
-            foreach (var cell in _cells)
-                if (cell.IsAlive)
-                {
-                    alive++;
-                    totAge += cell.Age;
-                }
-
-            avgLifespan = alive == 0 ? 0 : (double)totAge / alive;
+            foreach (var cell in Cells)
+                cell.IsFed = cell.IsAlive;
         }
         #endregion Public Methods
 
         #region Private Methods
         /// <summary>
-        /// Connect a cell with its neigbors
+        /// Connect a cell with its neighbors
         /// </summary>
         /// <param name="wrap"></param>
         private void ConnectCells(bool wrap)
@@ -153,11 +134,12 @@ namespace GameOfLife.Models
                 for (int y = 0; y < Rows; y++)
                 {
                     // Determine if cell is on the side of the tank
-                    bool isLeftEdge = (x == 0);
-                    bool isRightEdge = (x == Columns - 1);
-                    bool isTopEdge = (y == 0);
-                    bool isBottomEdge = (y == Rows - 1);
+                    bool isLeftEdge = x == 0;
+                    bool isRightEdge = x == Columns - 1;
+                    bool isTopEdge = y == 0;
+                    bool isBottomEdge = y == Rows - 1;
                     bool isEdge = isLeftEdge || isRightEdge || isTopEdge || isBottomEdge;
+                    
                     if (!wrap && isEdge)
                         continue;
 
@@ -168,14 +150,15 @@ namespace GameOfLife.Models
                     int bottomNeighbor = isBottomEdge ? 0 : y + 1;
 
                     // Add the neighbors
-                    _cells[x, y].Neighbors.Add(_cells[leftNeighbor, topNeighbor]);
-                    _cells[x, y].Neighbors.Add(_cells[x, topNeighbor]);
-                    _cells[x, y].Neighbors.Add(_cells[rightNeighbor, topNeighbor]);
-                    _cells[x, y].Neighbors.Add(_cells[leftNeighbor, y]);
-                    _cells[x, y].Neighbors.Add(_cells[rightNeighbor, y]);
-                    _cells[x, y].Neighbors.Add(_cells[leftNeighbor, bottomNeighbor]);
-                    _cells[x, y].Neighbors.Add(_cells[x, bottomNeighbor]);
-                    _cells[x, y].Neighbors.Add(_cells[rightNeighbor, bottomNeighbor]);
+                    var currentCell = Cells[x, y];
+                    currentCell.Neighbors.Add(Cells[leftNeighbor, topNeighbor]);
+                    currentCell.Neighbors.Add(Cells[x, topNeighbor]);
+                    currentCell.Neighbors.Add(Cells[rightNeighbor, topNeighbor]);
+                    currentCell.Neighbors.Add(Cells[leftNeighbor, y]);
+                    currentCell.Neighbors.Add(Cells[rightNeighbor, y]);
+                    currentCell.Neighbors.Add(Cells[leftNeighbor, bottomNeighbor]);
+                    currentCell.Neighbors.Add(Cells[x, bottomNeighbor]);
+                    currentCell.Neighbors.Add(Cells[rightNeighbor, bottomNeighbor]);
                 }
             }
         }
