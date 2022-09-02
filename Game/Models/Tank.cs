@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using GameOfLife.Enums;
 
 namespace GameOfLife.Models
@@ -10,14 +11,12 @@ namespace GameOfLife.Models
     {
         #region Private Members
         private readonly Cell[,] _cells;
-        private readonly int _cellSize;
         private readonly Random _random;
         #endregion Private Members
 
         #region Constructors
-        public Tank(int width, int height, int cellSize, bool wrap = true)
+        public Tank(int width, int height, int cellSize, Color cellColor, bool wrap = true)
         {
-            _cellSize = cellSize;
             _random = new Random();
 
             _cells = new Cell[width / cellSize, height / cellSize];
@@ -25,6 +24,8 @@ namespace GameOfLife.Models
                 for (int y = 0; y < Rows; y++)
                     _cells[x, y] = new Cell();
 
+            CellSize = cellSize;
+            CellColor = cellColor;
             ConnectCells(wrap);
         }
         #endregion Constructors
@@ -33,7 +34,7 @@ namespace GameOfLife.Models
         /// <summary>
         /// Size of the cells
         /// </summary>
-        public int CellSize => _cellSize;
+        public int CellSize { get; private set; }
         /// <summary>
         /// Amount of columns in the tank
         /// </summary>
@@ -45,11 +46,15 @@ namespace GameOfLife.Models
         /// <summary>
         /// Width of the tank
         /// </summary>
-        public int Width => Columns * _cellSize;
+        public int Width => Columns * CellSize;
         /// <summary>
         /// Height of the tank
         /// </summary>
-        public int Height => Rows * _cellSize;
+        public int Height => Rows * CellSize;
+        /// <summary>
+        /// Color of the cells in the tank
+        /// </summary>
+        public Color CellColor { get; set; }
         #endregion Properties
 
         #region Public Methods

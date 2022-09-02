@@ -114,6 +114,19 @@ namespace GameOfLife.Forms
 		private void GunButton_Click(object sender, EventArgs e) => _window.Reset(CellPatterns.GUN);
 
 		private void RowButton_Click(object sender, EventArgs e) => _window.Reset(CellPatterns.ROW);
+
+		private void ColorButton_Click(object sender, EventArgs e)
+		{
+			ColorDialog colorDialog = new ColorDialog();
+			
+			// Keeps the user from selecting a custom color.
+			colorDialog.AllowFullOpen = false;
+			colorDialog.Color = _window.Tank.CellColor;
+
+			// Update the text box color if the user clicks OK 
+			if (colorDialog.ShowDialog() == DialogResult.OK)
+				_window.Tank.CellColor = colorDialog.Color;
+		}
 		#endregion Options
 
 		#region Private Methods
@@ -129,7 +142,9 @@ namespace GameOfLife.Forms
 			_totCycles = 0;
 			_avgLifespan = 0;
 			SetStats();
-			_window.Reset((int)CellSize.Value, (double)Density.Value);
+
+			Color cellColor = _window?.Tank?.CellColor ?? Color.LightBlue;
+			_window.Reset((int)CellSize.Value, cellColor, (double)Density.Value);
 		}
 
 		/// <summary>

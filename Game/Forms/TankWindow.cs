@@ -34,15 +34,15 @@ namespace GameOfLife.Forms
         /// Reset the tank
         /// </summary>
         /// <param name="randomize"></param>
-        public void Reset() => Reset(Tank.CellSize, _lastDensity);
+        public void Reset() => Reset(Tank.CellSize, Tank.CellColor, _lastDensity);
 
         /// <summary>
         /// Reset the tank
         /// </summary>
         /// <param name="randomize"></param>
-        public void Reset(int size, double density = 0)
+        public void Reset(int size, Color cellColor, double density = 0)
         {
-            Tank = new Tank(Window.Width, Window.Height, size);
+            Tank = new Tank(Window.Width, Window.Height, size, cellColor);
             if (density > 0)
                 Tank.Randomize(density / 100);
 
@@ -57,7 +57,7 @@ namespace GameOfLife.Forms
         /// <param name="pattern"></param>
         public void Reset(string pattern)
         {
-            Reset(Tank.CellSize);
+            Reset(Tank.CellSize, Tank.CellColor);
             Tank.InjectPattern(pattern);
             Render();
         }
@@ -80,9 +80,9 @@ namespace GameOfLife.Forms
         /// </summary>
         private void Render()
         {
-            using (var bmp = new Bitmap(Tank.Width, Tank.Height))
-            using (var gfx = Graphics.FromImage(bmp))
-            using (var brush = new SolidBrush(Color.LightBlue))
+            using (var canvas = new Bitmap(Tank.Width, Tank.Height))
+            using (var brush = new SolidBrush(Tank.CellColor))
+            using (var gfx = Graphics.FromImage(canvas))
             {
                 gfx.Clear(ColorTranslator.FromHtml("#2f3539"));
 
@@ -104,7 +104,7 @@ namespace GameOfLife.Forms
                 }
 
                 Window.Image?.Dispose();
-                Window.Image = (Bitmap)bmp.Clone();
+                Window.Image = (Bitmap)canvas.Clone();
             }
         }
 

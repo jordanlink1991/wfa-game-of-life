@@ -60,6 +60,8 @@ namespace GameOfLife.Forms
 			this.SpaceshipButton = new System.Windows.Forms.Button();
 			this.RowButton = new System.Windows.Forms.Button();
 			this.Timer = new System.Windows.Forms.Timer(this.components);
+			this.ColorDialog = new System.Windows.Forms.ColorDialog();
+			this.ColorButton = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.CellSize)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.Delay)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.Density)).BeginInit();
@@ -129,7 +131,7 @@ namespace GameOfLife.Forms
 			// 
 			// Density
 			// 
-			this.Density.Location = new System.Drawing.Point(102, 74);
+			this.Density.Location = new System.Drawing.Point(106, 51);
 			this.Density.Minimum = new decimal(new int[] {
             1,
             0,
@@ -148,18 +150,18 @@ namespace GameOfLife.Forms
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(31, 76);
+			this.label3.Location = new System.Drawing.Point(9, 53);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(62, 13);
+			this.label3.Size = new System.Drawing.Size(91, 13);
 			this.label3.TabIndex = 13;
-			this.label3.Text = "Density (%):";
+			this.label3.Text = "Rand Density (%):";
 			// 
 			// ShowGrid
 			// 
 			this.ShowGrid.AutoSize = true;
 			this.ShowGrid.Checked = true;
 			this.ShowGrid.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.ShowGrid.Location = new System.Drawing.Point(87, 108);
+			this.ShowGrid.Location = new System.Drawing.Point(80, 104);
 			this.ShowGrid.Name = "ShowGrid";
 			this.ShowGrid.Size = new System.Drawing.Size(75, 17);
 			this.ShowGrid.TabIndex = 14;
@@ -170,7 +172,7 @@ namespace GameOfLife.Forms
 			// StopTime
 			// 
 			this.StopTime.AutoSize = true;
-			this.StopTime.Location = new System.Drawing.Point(6, 108);
+			this.StopTime.Location = new System.Drawing.Point(6, 104);
 			this.StopTime.Name = "StopTime";
 			this.StopTime.Size = new System.Drawing.Size(74, 17);
 			this.StopTime.TabIndex = 15;
@@ -191,7 +193,7 @@ namespace GameOfLife.Forms
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(7, 108);
+			this.label5.Location = new System.Drawing.Point(6, 103);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(44, 13);
 			this.label5.TabIndex = 18;
@@ -199,7 +201,7 @@ namespace GameOfLife.Forms
 			// 
 			// TotCycles
 			// 
-			this.TotCycles.Location = new System.Drawing.Point(57, 108);
+			this.TotCycles.Location = new System.Drawing.Point(56, 103);
 			this.TotCycles.Name = "TotCycles";
 			this.TotCycles.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.TotCycles.Size = new System.Drawing.Size(71, 13);
@@ -210,7 +212,7 @@ namespace GameOfLife.Forms
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(7, 95);
+			this.label6.Location = new System.Drawing.Point(6, 90);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(44, 13);
 			this.label6.TabIndex = 20;
@@ -239,7 +241,7 @@ namespace GameOfLife.Forms
 			// 
 			// AvgLifespan
 			// 
-			this.AvgLifespan.Location = new System.Drawing.Point(89, 42);
+			this.AvgLifespan.Location = new System.Drawing.Point(89, 52);
 			this.AvgLifespan.Name = "AvgLifespan";
 			this.AvgLifespan.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.AvgLifespan.Size = new System.Drawing.Size(38, 13);
@@ -250,7 +252,7 @@ namespace GameOfLife.Forms
 			// label10
 			// 
 			this.label10.AutoSize = true;
-			this.label10.Location = new System.Drawing.Point(6, 42);
+			this.label10.Location = new System.Drawing.Point(6, 52);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(72, 13);
 			this.label10.TabIndex = 30;
@@ -258,7 +260,7 @@ namespace GameOfLife.Forms
 			// 
 			// TotAlive
 			// 
-			this.TotAlive.Location = new System.Drawing.Point(56, 16);
+			this.TotAlive.Location = new System.Drawing.Point(56, 26);
 			this.TotAlive.Name = "TotAlive";
 			this.TotAlive.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.TotAlive.Size = new System.Drawing.Size(71, 13);
@@ -269,7 +271,7 @@ namespace GameOfLife.Forms
 			// label8
 			// 
 			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(6, 16);
+			this.label8.Location = new System.Drawing.Point(6, 26);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(33, 13);
 			this.label8.TabIndex = 26;
@@ -277,7 +279,7 @@ namespace GameOfLife.Forms
 			// 
 			// TotDead
 			// 
-			this.TotDead.Location = new System.Drawing.Point(56, 29);
+			this.TotDead.Location = new System.Drawing.Point(56, 39);
 			this.TotDead.Name = "TotDead";
 			this.TotDead.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.TotDead.Size = new System.Drawing.Size(71, 13);
@@ -288,7 +290,7 @@ namespace GameOfLife.Forms
 			// Dead
 			// 
 			this.Dead.AutoSize = true;
-			this.Dead.Location = new System.Drawing.Point(6, 29);
+			this.Dead.Location = new System.Drawing.Point(6, 39);
 			this.Dead.Name = "Dead";
 			this.Dead.Size = new System.Drawing.Size(36, 13);
 			this.Dead.TabIndex = 24;
@@ -296,7 +298,7 @@ namespace GameOfLife.Forms
 			// 
 			// TotBirths
 			// 
-			this.TotBirths.Location = new System.Drawing.Point(57, 82);
+			this.TotBirths.Location = new System.Drawing.Point(56, 77);
 			this.TotBirths.Name = "TotBirths";
 			this.TotBirths.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.TotBirths.Size = new System.Drawing.Size(71, 13);
@@ -307,7 +309,7 @@ namespace GameOfLife.Forms
 			// label7
 			// 
 			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(7, 82);
+			this.label7.Location = new System.Drawing.Point(6, 77);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(36, 13);
 			this.label7.TabIndex = 22;
@@ -315,7 +317,7 @@ namespace GameOfLife.Forms
 			// 
 			// TotDeaths
 			// 
-			this.TotDeaths.Location = new System.Drawing.Point(57, 95);
+			this.TotDeaths.Location = new System.Drawing.Point(56, 90);
 			this.TotDeaths.Name = "TotDeaths";
 			this.TotDeaths.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.TotDeaths.Size = new System.Drawing.Size(71, 13);
@@ -325,20 +327,19 @@ namespace GameOfLife.Forms
 			// 
 			// groupBox2
 			// 
+			this.groupBox2.Controls.Add(this.ColorButton);
 			this.groupBox2.Controls.Add(this.label1);
 			this.groupBox2.Controls.Add(this.CellSize);
 			this.groupBox2.Controls.Add(this.Delay);
 			this.groupBox2.Controls.Add(this.StopTime);
-			this.groupBox2.Controls.Add(this.Density);
 			this.groupBox2.Controls.Add(this.ShowGrid);
 			this.groupBox2.Controls.Add(this.label2);
-			this.groupBox2.Controls.Add(this.label3);
 			this.groupBox2.Location = new System.Drawing.Point(152, 12);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(168, 131);
 			this.groupBox2.TabIndex = 22;
 			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Tank Controls";
+			this.groupBox2.Text = "Config";
 			// 
 			// groupBox3
 			// 
@@ -347,6 +348,8 @@ namespace GameOfLife.Forms
 			this.groupBox3.Controls.Add(this.GliderButton);
 			this.groupBox3.Controls.Add(this.SpaceshipButton);
 			this.groupBox3.Controls.Add(this.RowButton);
+			this.groupBox3.Controls.Add(this.Density);
+			this.groupBox3.Controls.Add(this.label3);
 			this.groupBox3.Location = new System.Drawing.Point(12, 220);
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.Size = new System.Drawing.Size(308, 82);
@@ -366,9 +369,9 @@ namespace GameOfLife.Forms
 			// 
 			// ResetButton
 			// 
-			this.ResetButton.Location = new System.Drawing.Point(9, 19);
+			this.ResetButton.Location = new System.Drawing.Point(6, 19);
 			this.ResetButton.Name = "ResetButton";
-			this.ResetButton.Size = new System.Drawing.Size(150, 52);
+			this.ResetButton.Size = new System.Drawing.Size(153, 23);
 			this.ResetButton.TabIndex = 15;
 			this.ResetButton.Text = "Random";
 			this.ResetButton.UseVisualStyleBackColor = true;
@@ -409,15 +412,27 @@ namespace GameOfLife.Forms
 			this.Timer.Enabled = true;
 			this.Timer.Tick += new System.EventHandler(this.Timer_Tick);
 			// 
+			// ColorButton
+			// 
+			this.ColorButton.Location = new System.Drawing.Point(6, 75);
+			this.ColorButton.Name = "ColorButton";
+			this.ColorButton.Size = new System.Drawing.Size(149, 23);
+			this.ColorButton.TabIndex = 18;
+			this.ColorButton.Text = "Set Color";
+			this.ColorButton.UseVisualStyleBackColor = true;
+			this.ColorButton.Click += new System.EventHandler(this.ColorButton_Click);
+			// 
 			// TankControls
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(332, 322);
+			this.ClientSize = new System.Drawing.Size(332, 312);
 			this.Controls.Add(this.groupBox3);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.Feed);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			this.HelpButton = true;
 			this.Name = "TankControls";
 			this.Text = "Tank Controls";
 			((System.ComponentModel.ISupportInitialize)(this.CellSize)).EndInit();
@@ -428,6 +443,7 @@ namespace GameOfLife.Forms
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
 			this.groupBox3.ResumeLayout(false);
+			this.groupBox3.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -464,5 +480,7 @@ namespace GameOfLife.Forms
 		private System.Windows.Forms.Button RowButton;
 		private System.Windows.Forms.Timer Timer;
 		private System.Windows.Forms.Label AvgLifespan;
+		private System.Windows.Forms.ColorDialog ColorDialog;
+		private System.Windows.Forms.Button ColorButton;
 	}
 }
