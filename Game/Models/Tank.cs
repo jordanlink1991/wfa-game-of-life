@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using GameOfLife.Enums;
+using GameOfLife.Models.Stats;
 
 namespace GameOfLife.Models
 {
@@ -19,11 +20,12 @@ namespace GameOfLife.Models
             _random = new Random();
 
             Cells = new Cell[width / cellSize, height / cellSize];
+            Width = Columns * cellSize;
+            Height = Rows * cellSize;
             for (int x = 0; x < Columns; x++)
                 for (int y = 0; y < Rows; y++)
                     Cells[x, y] = new Cell();
 
-            CellSize = cellSize;
             ConnectCells(wrap);
         }
         #endregion Constructors
@@ -33,10 +35,6 @@ namespace GameOfLife.Models
         /// Cells in the tank
         /// </summary>
         public Cell[,] Cells { get; private set; }
-        /// <summary>
-        /// Size of the cells
-        /// </summary>
-        public int CellSize { get; private set; }
         /// <summary>
         /// Amount of columns in the tank
         /// </summary>
@@ -48,11 +46,11 @@ namespace GameOfLife.Models
         /// <summary>
         /// Width of the tank
         /// </summary>
-        public int Width => Columns * CellSize;
+        public int Width { get; private set; }
         /// <summary>
         /// Height of the tank
         /// </summary>
-        public int Height => Rows * CellSize;
+        public int Height { get; private set; }
         #endregion Properties
 
         #region Indexers
@@ -77,11 +75,11 @@ namespace GameOfLife.Models
         }
 
         /// <summary>
-        /// Using a known pattern filled with 'x's, set the state of 
-        /// the cells from the center of the tank
+        /// Using a known pattern filled with 'x's, set the state of the cells from 
+        /// the center of the tank
         /// </summary>
         /// <param name="pattern"></param>
-        public void InjectPattern(string pattern)
+        public void BirthPattern(string pattern)
         {
             string[] lines = pattern.Split('\n');
             int yOffset = (Rows - lines.Length) / 2;
@@ -91,6 +89,44 @@ namespace GameOfLife.Models
                 for (int x = 0; x < lines[y].Length; x++)
                     if(lines[y].Substring(x, 1) == "X")
                         Cells[x + xOffset, y + yOffset].State = CellState.Alive;
+        }
+
+        /// <summary>
+        /// Update all the cells
+        /// </summary>
+        public CycleStats Advance()
+        {
+            // Determine the next state of the cell
+            CycleStats stats = new CycleStats();
+            foreach (var cell in Cells)
+            {
+                cell.DetermineNextState();
+                if (cell.State == CellState.ToBeBorn)
+                    stats.CellsBorn++;
+                else if (cell.State == CellState.ToDie)
+                    stats.CellsDied++;
+            }
+
+            // Update cell states
+            int totAge = 0;
+            foreach (var cell in Cells)
+            {
+                cell.Update();
+                if (cell.State == CellState.Alive)
+                {
+                    stats.CellsAlive++;
+                    totAge += cell.Age;
+                }
+                else if (cell.State == CellState.Dead)
+                {
+                    stats.CellsDead++;
+                }
+            }
+
+            // Determine lifespan
+            stats.AvgLifespan = stats.CellsAlive == 0 ? 0 : (double)totAge / stats.CellsAlive;
+
+            return stats;
         }
 
         /// <summary>
@@ -107,15 +143,12 @@ namespace GameOfLife.Models
                 else if (cell.State == CellState.ToDie)
                     died++;
             }
-            
-            foreach (var cell in Cells)
-                cell.Update();
         }
 
         /// <summary>
         /// Feed all the alive cells
         /// </summary>
-        public void FeedCells()
+        public void Feed()
         {
             foreach (var cell in Cells)
                 cell.IsFed = cell.IsAlive;

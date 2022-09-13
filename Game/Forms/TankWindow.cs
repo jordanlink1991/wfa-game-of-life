@@ -1,4 +1,5 @@
 ﻿using GameOfLife.Models;
+using GameOfLife.Models.Stats;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -8,8 +9,7 @@ namespace GameOfLife.Forms
     public partial class TankWindow : Form
     {
         #region Private Members
-        private double _lastDensity;
-        private Color _lastCellColor;
+        private TankConfig _lastConfig;
         #endregion Private Members
 
         #region Constructors
@@ -24,44 +24,27 @@ namespace GameOfLife.Forms
         /// Tank of cells
         /// </summary>
         public Tank Tank { get; private set; }
-        /// <summary>
-        /// Identify if the grid should be shown on the window
-        /// </summary>
-        public bool ShowGrid { get; set; }
-        /// <summary>
-        /// Color of the tank
-        /// </summary>
-        public Color TankColor { get; set; }
-        #endregion Properties
+		#endregion Properties
 
-        #region Public 
-        /// <summary>
-        /// Reset the tank
-        /// </summary>
-        /// <param name="randomize"></param>
-        public void Reset(int size, Color cellColor, double density = 0)
+		#region Public 
+		public void Reset(TankConfig config)
+		{
+			Tank = new Tank(Window.Width, Window.Height, config.CellSize);
+			if (config.RandomDensity > 0)
+				Tank.Randomize((double)config.RandomDensity / 100);
+
+            _lastConfig = config;
+            Render(config);
+		}
+
+		/// <summary>
+		/// Reset the board with a pattern
+		/// </summary>
+		/// <param name="pattern"></param>
+		public void InjectPattern(TankConfig config, string pattern)
         {
-            Tank = new Tank(Window.Width, Window.Height, size);
-            foreach (Cell cell in Tank.Cells)
-                cell.Color = cellColor;
-
-            if (density > 0)
-                Tank.Randomize(density / 100);
-
-            _lastDensity = density;
-            _lastCellColor = cellColor;
-
-            Render();
-        }
-
-        /// <summary>
-        /// Reset the board with a pattern
-        /// </summary>
-        /// <param name="pattern"></param>
-        public void InjectPattern(string pattern)
-        {
-            Tank.InjectPattern(pattern);
-            Render();
+            Tank.BirthPattern(pattern);
+            Render(config);
         }
 
         /// <summary>
@@ -69,10 +52,11 @@ namespace GameOfLife.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void Advance(out int newBorns, out int died)
+        public CycleStats Advance(TankConfig config)
         {
-            Tank.Advance(out newBorns, out died);
-            Render();
+            CycleStats stats = Tank.Advance();
+            Render(config);
+            return stats;
         }
         #endregion Public Methods
 
@@ -80,15 +64,15 @@ namespace GameOfLife.Forms
         /// <summary>
         /// Draw the Tank onto the window
         /// </summary>
-        private void Render()
+        private void Render(TankConfig config)
         {
             using (var canvas = new Bitmap(Tank.Width, Tank.Height))
             using (var gfx = Graphics.FromImage(canvas))
             {
-                gfx.Clear(TankColor);
+                gfx.Clear(config.TankColor);
 
-                int buffer = ShowGrid && Tank.CellSize > 1 ? 1 : 0;
-                var cellSize = new Size(Tank.CellSize - buffer, Tank.CellSize - buffer);
+                int buffer = config.ShowGrid && config.CellSize > 1 ? 1 : 0;
+                var cellSize = new Size(config.CellSize - buffer, config.CellSize - buffer);
                 for (int x = 0; x < Tank.Columns; x++)
                 {
                     for (int y = 0; y < Tank.Rows; y++)
@@ -97,10 +81,10 @@ namespace GameOfLife.Forms
                         if (!cell.IsAlive)
                             continue;
 
-                        var cellLocation = new Point(x * Tank.CellSize, y * Tank.CellSize);
+                        var cellLocation = new Point(x * config.CellSize, y * config.CellSize);
                         var cellRect = new Rectangle(cellLocation, cellSize);
 
-                        using (var brush = new SolidBrush(cell.Color))
+                        using (var brush = new SolidBrush(config.CellColor))
                             gfx.FillRectangle(brush, cellRect);
                     }
                 }
@@ -120,7 +104,8 @@ namespace GameOfLife.Forms
             // Method hit on form opening, so ignore first round
             if (Tank == null)
                 return;
-            Reset(Tank.CellSize, _lastCellColor, _lastDensity);
+
+            Reset(_lastConfig);
         }
         #endregion Private Methods
     }
