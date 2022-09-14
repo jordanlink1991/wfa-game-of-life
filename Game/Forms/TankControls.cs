@@ -121,6 +121,13 @@ namespace GameOfLife.Forms
 			_stats.TotalCycles++;
 			SetStats();
 		}
+		
+		/// <summary>
+		/// Method hit when clicking the link
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void CompanyLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) => System.Diagnostics.Process.Start("https://linkrulzsoftware.com/");
 		#endregion Other Controls
 
 		#region Options
@@ -134,7 +141,7 @@ namespace GameOfLife.Forms
 
 		private void RowButton_Click(object sender, EventArgs e) => Reset(CellPatterns.ROW);
 
-		private void SunButton_Click(object sender, EventArgs e) => Reset(CellPatterns.SUN);
+		private void PulsarButton_Click(object sender, EventArgs e) => Reset(CellPatterns.PULSAR);
 
 		private void CellColorButton_Click(object sender, EventArgs e)
 		{

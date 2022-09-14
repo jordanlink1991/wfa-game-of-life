@@ -15,7 +15,7 @@ namespace GameOfLife.Models
 			CellSize = 10;
 			CycleTime = 100;
 			RandomDensity = 15;
-			TankColor = Color.Black;
+			TankColor = Color.FromArgb(31, 38, 40);
 			CellColor = Color.LightBlue;
 			FreezeTime = false;
 			ShowGrid = true;

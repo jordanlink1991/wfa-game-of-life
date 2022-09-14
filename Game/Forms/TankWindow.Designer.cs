@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TankWindow));
 			this.Window = new System.Windows.Forms.PictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.Window)).BeginInit();
 			this.SuspendLayout();
@@ -51,6 +52,7 @@
 			this.ClientSize = new System.Drawing.Size(888, 450);
 			this.Controls.Add(this.Window);
 			this.ForeColor = System.Drawing.SystemColors.ControlText;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.ImeMode = System.Windows.Forms.ImeMode.Off;
 			this.Name = "TankWindow";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
